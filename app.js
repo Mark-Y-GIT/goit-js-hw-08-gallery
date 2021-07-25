@@ -65,21 +65,38 @@ const galleryItems = [
 ];
 
 
+
+
+
 const galleryListRef = document.querySelector('.js-gallery');
 
 const galleryListHandler = galleryListRef.addEventListener('click', galleryListClick);
 
 const modalRef = document.querySelector('.js-lightbox');
 
-const closeModalButtonRef = document.querySelector("[data-action=close-lightbox]")
+const closeModalButtonRef = document.querySelector('[data-action=close-lightbox]')
 
-const closeModalButtonHandler = closeModalButtonRef.addEventListener('click', () => {
-  modalRef.classList.remove("is-open");
-  lightboxImgRef.src = "";
-})
+const lightboxOverlayRef = document.querySelector('.lightbox__overlay')
+
+const lightboxOverlayHandler = lightboxOverlayRef.addEventListener('click', closeModalOverlayHandler)
+
+const closeModalButtonHandler = closeModalButtonRef.addEventListener('click',modalClose)
 
 const lightboxImgRef = document.querySelector('.lightbox__image')
-console.log(lightboxImgRef.src);
+
+
+document.addEventListener('keydown',esc)
+
+
+
+
+function esc(e) {
+  if (e.code !== "Escape") { return };
+  console.log("ecs");
+  modalClose();
+
+}
+
 
 
     
@@ -136,14 +153,27 @@ function galleryListClick(e) {
 
 
 
+  
+
+
+
 
 
 
 }
 
+function closeModalOverlayHandler(e) {
+  if (!e.target.classList.contains("lightbox__overlay")) { return };
+  
+  modalClose()
+
+  
+}
 
 
-
+function modalClose(){
+  modalRef.classList.remove("is-open");
+  lightboxImgRef.src = "";}
 
   
 
