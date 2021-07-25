@@ -65,7 +65,9 @@ const galleryItems = [
 ];
 
 
-const galleryList = document.querySelector('.gallery');
+const galleryList = document.querySelector('.js-gallery');
+
+const galleryListHandler = galleryList.addEventListener('click',galleryListClick)
     
 // console.log(gallery);
 
@@ -99,8 +101,25 @@ function addingMarkUp(markUp) {
   galleryList.insertAdjacentHTML('beforeend', markUp)
 }
 
+function galleryListClick(e) {
+
+  e.preventDefault();
+
+  const target = e.target.classList.contains("gallery__image");
+
+  if (!target) { return };
+
+  const imageUrl = e.target.dataset.source;
+  
+  console.log(imageUrl);
+  console.log(e.currentTarget);
+
+}
 
 
+  
+
+  
 
 
 creatingGalleryCards(galleryItems)
