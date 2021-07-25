@@ -73,7 +73,14 @@ const modalRef = document.querySelector('.js-lightbox');
 
 const closeModalButtonRef = document.querySelector("[data-action=close-lightbox]")
 
-const closeModalButtonHandler = closeModalButtonRef.addEventListener('click',()=>modalRef.classList.remove("is-open"))
+const closeModalButtonHandler = closeModalButtonRef.addEventListener('click', () => {
+  modalRef.classList.remove("is-open");
+  lightboxImgRef.src = "";
+})
+
+const lightboxImgRef = document.querySelector('.lightbox__image')
+console.log(lightboxImgRef.src);
+
 
     
 // console.log(gallery);
@@ -116,13 +123,21 @@ function galleryListClick(e) {
 
   if (!target) { return };
 
+  if (lightboxImgRef.src !== "") { lightboxImgRef.src = ".#"; }
+
   const imageUrl = e.target.dataset.source;
   
   // console.log(imageUrl);
   // console.log(e.currentTarget);
 
+  lightboxImgRef.src = imageUrl
 
   modalRef.classList.add("is-open")
+
+
+
+
+
 
 }
 
