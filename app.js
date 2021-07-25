@@ -64,50 +64,25 @@ const galleryItems = [
   },
 ];
 
+const refs = {
+  galleryListRef: document.querySelector('.js-gallery'),
+  modalRef: document.querySelector('.js-lightbox'),
+  closeModalButtonRef: document.querySelector('[data-action=close-lightbox]'),
+  lightboxOverlayRef: document.querySelector('.lightbox__overlay'),
+  lightboxImgRef: document.querySelector('.lightbox__image'),
+};
 
+refs.galleryListRef.addEventListener('click', galleryListClick);
 
+refs.lightboxOverlayRef.addEventListener('click', closeModalOverlayHandler);
 
-
-const galleryListRef = document.querySelector('.js-gallery');
-
-const galleryListHandler = galleryListRef.addEventListener('click', galleryListClick);
-
-const modalRef = document.querySelector('.js-lightbox');
-
-const closeModalButtonRef = document.querySelector('[data-action=close-lightbox]')
-
-const lightboxOverlayRef = document.querySelector('.lightbox__overlay')
-
-const lightboxOverlayHandler = lightboxOverlayRef.addEventListener('click', closeModalOverlayHandler)
-
-const closeModalButtonHandler = closeModalButtonRef.addEventListener('click',modalClose)
-
-const lightboxImgRef = document.querySelector('.lightbox__image')
-
-
-document.addEventListener('keydown',esc)
-
-
-
-
-function esc(e) {
-  if (e.code !== "Escape") { return };
-  console.log("ecs");
-  modalClose();
-
-}
-
-
-
-    
-// console.log(gallery);
-
+refs.closeModalButtonRef.addEventListener('click', modalClose);
 
 function creatingGalleryCards(gallery) {
-  
-  const markUp = gallery.map(({ preview, original, description }) => 
-    
-    `<li class="gallery__item">
+  const markUp = gallery
+    .map(
+      ({ preview, original, description }) =>
+        `<li class="gallery__item">
       <a
         class="gallery__link"
         href="${original}"
@@ -119,66 +94,96 @@ function creatingGalleryCards(gallery) {
           alt="${description}"
         />
       </a>
-    </li>`
-  
-  ).join('')
+    </li>`,
+    )
+    .join('');
 
- addingMarkUp(markUp)
-
-
+  addingMarkUp(markUp);
 }
 
 function addingMarkUp(markUp) {
-  galleryListRef.insertAdjacentHTML('beforeend', markUp)
+  refs.galleryListRef.insertAdjacentHTML('beforeend', markUp);
 }
 
-function galleryListClick(e) {
+function galleryListClick(event) {
+  event.preventDefault();
+  const galleryTarget = event.target.classList.contains('gallery__image');
 
-  e.preventDefault();
+  if (!galleryTarget) {
+    return;
+  }
 
-  const target = e.target.classList.contains("gallery__image");
+  const imageUrl = event.target.dataset.source;
 
-  if (!target) { return };
+  refs.lightboxImgRef.src = imageUrl;
 
-  if (lightboxImgRef.src !== "") { lightboxImgRef.src = ".#"; }
+  refs.lightboxImgRef.alt = event.target.alt;
 
-  const imageUrl = e.target.dataset.source;
-  
-  // console.log(imageUrl);
-  // console.log(e.currentTarget);
+  refs.modalRef.classList.add('is-open');
 
-  lightboxImgRef.src = imageUrl
-
-  modalRef.classList.add("is-open")
-
-
-
-  
-
-
-
-
-
-
+  document.addEventListener('keydown', esc);
 }
 
 function closeModalOverlayHandler(e) {
-  if (!e.target.classList.contains("lightbox__overlay")) { return };
-  
-  modalClose()
+  if (!e.target.classList.contains('lightbox__overlay')) {
+    return;
+  }
 
-  
+  modalClose();
 }
 
+function modalClose() {
+  refs.modalRef.classList.remove('is-open');
+  refs.lightboxImgRef.src = '';
+  refs.lightboxImgRef.alt = '';
 
-function modalClose(){
-  modalRef.classList.remove("is-open");
-  lightboxImgRef.src = "";}
+  document.removeEventListener('keydown', esc);
+}
 
-  
+function esc(e) {
+  let totalPicture;
+  if (e.code === 'ArrowRight') {
+    galleryItems.forEach((galleryItem, i) => {
+      if (refs.lightboxImgRef.src === galleryItem.original) {
+        totalPicture = i;
+      }
+    });
 
-  
+    if (totalPicture === galleryItems.length - 1) {
+      refs.lightboxImgRef.src =
+        galleryItems[galleryItems.length - galleryItems.length].original;
 
+      refs.lightboxImgRef.alt =
+        galleryItems[galleryItems.length - galleryItems.length].description;
 
-creatingGalleryCards(galleryItems)
+      return;
+    }
 
+    refs.lightboxImgRef.src = galleryItems[totalPicture + 1].original;
+    refs.lightboxImgRef.alt = galleryItems[totalPicture + 1].description;
+  }
+
+  if (e.code === 'ArrowLeft') {
+    galleryItems.forEach((galleryItem, i) => {
+      if (refs.lightboxImgRef.src === galleryItem?.original) {
+        totalPicture = i;
+      }
+    });
+
+    if (totalPicture === 0) {
+      refs.lightboxImgRef.src = galleryItems[galleryItems.length - 1].original;
+      refs.lightboxImgRef.alt =
+        galleryItems[galleryItems.length - 1].description;
+      return;
+    }
+
+    refs.lightboxImgRef.src = galleryItems[totalPicture - 1]?.original;
+    refs.lightboxImgRef.alt = galleryItems[totalPicture - 1]?.description;
+  }
+
+  if (e.code === 'Escape') {
+    modalClose();
+  }
+}
+
+creatingGalleryCards(galleryItems);
