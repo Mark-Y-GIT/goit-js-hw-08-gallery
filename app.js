@@ -65,9 +65,16 @@ const galleryItems = [
 ];
 
 
-const galleryList = document.querySelector('.js-gallery');
+const galleryListRef = document.querySelector('.js-gallery');
 
-const galleryListHandler = galleryList.addEventListener('click',galleryListClick)
+const galleryListHandler = galleryListRef.addEventListener('click', galleryListClick);
+
+const modalRef = document.querySelector('.js-lightbox');
+
+const closeModalButtonRef = document.querySelector("[data-action=close-lightbox]")
+
+const closeModalButtonHandler = closeModalButtonRef.addEventListener('click',()=>modalRef.classList.remove("is-open"))
+
     
 // console.log(gallery);
 
@@ -98,7 +105,7 @@ function creatingGalleryCards(gallery) {
 }
 
 function addingMarkUp(markUp) {
-  galleryList.insertAdjacentHTML('beforeend', markUp)
+  galleryListRef.insertAdjacentHTML('beforeend', markUp)
 }
 
 function galleryListClick(e) {
@@ -111,10 +118,16 @@ function galleryListClick(e) {
 
   const imageUrl = e.target.dataset.source;
   
-  console.log(imageUrl);
-  console.log(e.currentTarget);
+  // console.log(imageUrl);
+  // console.log(e.currentTarget);
+
+
+  modalRef.classList.add("is-open")
 
 }
+
+
+
 
 
   
