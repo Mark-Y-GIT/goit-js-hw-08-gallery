@@ -72,11 +72,13 @@ const refs = {
   lightboxImgRef: document.querySelector('.lightbox__image'),
 };
 
-refs.galleryListRef.addEventListener('click', galleryListClick);
+const { galleryListRef, modalRef, closeModalButtonRef, lightboxOverlayRef, lightboxImgRef } = refs;
 
-refs.lightboxOverlayRef.addEventListener('click', closeModalOverlayHandler);
+galleryListRef.addEventListener('click', galleryListClick);
 
-refs.closeModalButtonRef.addEventListener('click', modalClose);
+lightboxOverlayRef.addEventListener('click', closeModalOverlayHandler);
+
+closeModalButtonRef.addEventListener('click', modalClose);
 
 function creatingGalleryCards(gallery) {
   const markUp = gallery
@@ -102,7 +104,7 @@ function creatingGalleryCards(gallery) {
 }
 
 function addingMarkUp(markUp) {
-  refs.galleryListRef.insertAdjacentHTML('beforeend', markUp);
+  galleryListRef.insertAdjacentHTML('beforeend', markUp);
 }
 
 function galleryListClick(event) {
@@ -115,13 +117,13 @@ function galleryListClick(event) {
 
   const imageUrl = event.target.dataset.source;
 
-  refs.lightboxImgRef.src = imageUrl;
+  lightboxImgRef.src = imageUrl;
 
-  refs.lightboxImgRef.alt = event.target.alt;
+  lightboxImgRef.alt = event.target.alt;
 
-  refs.modalRef.classList.add('is-open');
+  modalRef.classList.add('is-open');
 
-  document.addEventListener('keydown', esc);
+  document.addEventListener('keydown', keys);
 }
 
 function closeModalOverlayHandler(e) {
@@ -133,14 +135,14 @@ function closeModalOverlayHandler(e) {
 }
 
 function modalClose() {
-  refs.modalRef.classList.remove('is-open');
-  refs.lightboxImgRef.src = '';
-  refs.lightboxImgRef.alt = '';
+  modalRef.classList.remove('is-open');
+  lightboxImgRef.src = '';
+  lightboxImgRef.alt = '';
 
-  document.removeEventListener('keydown', esc);
+  document.removeEventListener('keydown', keys);
 }
 
-function esc(e) {
+function keys(e) {
   let totalPicture;
   if (e.code === 'ArrowRight') {
     galleryItems.forEach((galleryItem, i) => {
@@ -150,35 +152,35 @@ function esc(e) {
     });
 
     if (totalPicture === galleryItems.length - 1) {
-      refs.lightboxImgRef.src =
+      lightboxImgRef.src =
         galleryItems[galleryItems.length - galleryItems.length].original;
 
-      refs.lightboxImgRef.alt =
+      lightboxImgRef.alt =
         galleryItems[galleryItems.length - galleryItems.length].description;
 
       return;
     }
 
-    refs.lightboxImgRef.src = galleryItems[totalPicture + 1].original;
-    refs.lightboxImgRef.alt = galleryItems[totalPicture + 1].description;
+    lightboxImgRef.src = galleryItems[totalPicture + 1].original;
+    lightboxImgRef.alt = galleryItems[totalPicture + 1].description;
   }
 
   if (e.code === 'ArrowLeft') {
     galleryItems.forEach((galleryItem, i) => {
-      if (refs.lightboxImgRef.src === galleryItem?.original) {
+      if (lightboxImgRef.src === galleryItem?.original) {
         totalPicture = i;
       }
     });
 
     if (totalPicture === 0) {
-      refs.lightboxImgRef.src = galleryItems[galleryItems.length - 1].original;
-      refs.lightboxImgRef.alt =
+      lightboxImgRef.src = galleryItems[galleryItems.length - 1].original;
+      lightboxImgRef.alt =
         galleryItems[galleryItems.length - 1].description;
       return;
     }
 
-    refs.lightboxImgRef.src = galleryItems[totalPicture - 1]?.original;
-    refs.lightboxImgRef.alt = galleryItems[totalPicture - 1]?.description;
+    lightboxImgRef.src = galleryItems[totalPicture - 1]?.original;
+    lightboxImgRef.alt = galleryItems[totalPicture - 1]?.description;
   }
 
   if (e.code === 'Escape') {
